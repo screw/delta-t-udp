@@ -1145,18 +1145,18 @@ for algorithm).
 Pfbl:
 
  - Pres2: 6 bits reserved, set 0.
- - Pb: TheBmark,setasappropriateforlabelingthefirstdatabitin the packet.
- - Pdrf: Thedata-run-flag,labelsfirstbit.
-    - 1 AllpreviouslysentbitshavebeenAcked,
-    - 0 ThereareoutstandingunAckedbits.
+ - Pb: The B mark,set as appropriate for labeling the first data bi tin the packet.
+ - Pdrf: The data-run-flag, labels first bit.
+    - 1 All previously sent bits have been Acked,
+    - 0 There are outstanding unAcked bits.
 
 Plbl
- - Pres3: 7bitsreserved,set0.
- - Pe: TheEmark,setasappropriateforlabelingthelastdatabitin the packet.
+ - Pres3: 7bits reserved,set0.
+ - Pe: The E mark, set as appropriate for labeling the last data bit in the packet.
 
-Pds: Set0,cansegmentifnecessary.
+Pds: Set0, can segment if necessary.
 
-Pt: Set0,notraceortimestampdiagnostics.
+Pt: Set0, no trace or timestamp diagnostics.
 
 Pabl
  - Pres4: 8 bits (6 bits in Pabl and 2 additional) reserved, set 0.
@@ -1164,7 +1164,7 @@ Pabl
    similar meaning as for DeltaGram, although the version numbers may
    be different.
 
-Pdl: SettothenumberofbitsinthePuserDatafield.
+Pdl: Set to the number of bits in the PuserDatafield.
 
 PuserData: Variable,0ormoredatabits.
 
@@ -1178,8 +1178,8 @@ Pdn: Set1,DonotNakifundeliverable.
 
 PprtctLev: Dependent on protection policy enforced.
 
-Pid: SettotheAcksequencenumber,theSNofthenextexpectedbit (the
-receiver'sleft-window-edge).
+Pid: Set to the Ack sequence number, the SNof the next expected bit (the
+receiver's left-window-edge).
 
 Ptdf
 0 1     Pres5
@@ -1230,7 +1230,7 @@ Psubtype: definesthecontrolsubtype.
 
 PAtver: 2bitDelta-tversionnumber.
 
-Subtypedependent: definedforeachsubtype.
+Subtype dependent: defined for each sub type.
 
 Psubtype = 1: Rendezvous packet. Packet header fields for a Rendezvous
 packet are the following.
@@ -1241,7 +1241,7 @@ Pdn: Set0,donotNak.
 
 PprtctLev: Dependsonprotectionpolicyenforced.
 
-Pid: Sequencenumberofnextdatabitreceiveriscurrentlyknownto expect.
+Pid: Sequence number of next data bit receiver is currently known to expect.
 
 Ptdf
 
@@ -1296,14 +1296,13 @@ Pascal based procedure model for an association specified as an
 argument to the Delta-t interface procedures. Sections 6.1 and 6.2 in
 conjunction with preceding sections should be sufficient to give the
 reader an overview of Delta-t operation. Sections 6.3 to 6.7 present
-the model in detail. The
-modelisnotintendedtoimplyarequiredimplementation. Itisintendedto
-unambiguously specify functionality. Any algorithm with equivalent
-functionality can be used.
+the model in detail. The model is not intended to imply a required 
+implementation. It is intended to unambiguously specify functionality. 
+Any algorithm with equivalent functionality can be used.
 
 The model presented here assumes operation within the environment
 (EIM)
-definedinSection4. Untiltwoormorecommunicatingimplementationsexist,
+defined in Section 4. Until two or more communicating implementation sexist,
 this specification should be assumed to contain bugs. Please contact
 the author if questions arise.
 
@@ -1430,7 +1429,7 @@ packet acceptance are contained in procedures or functions with names
 of the form acceptX, where X is as defined above. Packets are
 discarded if unacceptable. A Nak packet is returned for two cases of
 unacceptable Data packets (Lifetime expired, or optionally if
-out-of-sequencepacketsarerejected). Ifthereceivedpacketisa Rendezvous
+out-of-sequence packets are rejected). If the received packet is a Rendezvous
 (packet accepted or not) or Data (when accepted or rejected and when a
 Nak is not sent) packet an Ack flag is set in the return from
 DtPktRcvd. The EIM will schedule a DtAck call which will generate an
@@ -1464,13 +1463,13 @@ Rendezvous Packets:
    schedules and issues a DtAck call.
 
 Ack Packets:
- - Delta-tsendstateisupdated(whatdatahasbeenAcked,the output window,
+ - Delta-t send state is updated (what data has been Acked, the output window,
    whether or not waiting for the output window to open, and Nak
    state).
  - State parameters required by the EIM are returned (what data have
    been Acked, the new output window, and if overflow has occurred
    and, what data has overflowed and needs resending).
- - AcodeisreturnedtotheEIMindicatingthataDtStartDatacall is required
+ - A code is returned to the EIM indicating that a DtStartData call is required
    to cause a Data or Rendezvous packet to be generated to Ack a
    reliable-Ack even if there is no data available for sending, that
    EIM sending can proceed when data is available or that sending is
@@ -1508,8 +1507,8 @@ headers and state information maintained by each end. Delta-t packet
 header information was defined in Section 5. We now define the state
 information maintained at each end. Logically, state information is
 always being maintained by each end for all possible associations with
-which Delta-t might
-beinvolved(permanentconnections). Infact,however,stateinformationmust
+which Delta-t might be involved (permanent connections). In fact, 
+however,state information must
 only be explicitly maintained for a subset of associations. For all
 other associations, the state information values are standard
 defaults. State records containing default values can be reclaimed.
@@ -1527,7 +1526,6 @@ or implementation, others are dependent on the details of the model or
 implementation. Other send and receive variables are local to Delta-t
 procedures.
 
--30-
 
 Rtimer RAtexp Riwle Riwre
 I Rovflwind a) Receive State
@@ -1540,7 +1538,7 @@ b) Send State
 
 Figure 6.1 Receive and Send CR State Information per Association (not the comp lete CR)
 
-TheCRReceiveandSendstateinformationisshowninFigure6.1 In addition
+The CR Receive and Send state information is shown in Figure 6.1 In addition
 other CR parameters for an association are required. These are
 prefixed with the letter A, and are defined in Section 6.2.5.
 
@@ -1570,13 +1568,13 @@ initialization, discussed below.
 
 ### Sender Initialization
 
-Deadstart or crash recovery requires that all state records (or just
+Dead start or crash recovery requires that all state records (or just
 those for damaged associations) be reset to their default values. An
 interval 3Δt must expire on a damaged association (crash with loss of
 memory) before sending any type of packet (see Appendix A). No Ack or
 Nak packet should be accepted before data has been sent. This assures
 that the destination's Rtimer will time out (removing half open
-connections) and that all data packets sent before the crash ana their
+connections) and that all data packets sent before the crash and their
 Acks or Naks have been destroyed. This condition is enforced in the
 model by checking this interval during the function tryData and the
 procedures processAck and processNak.
@@ -1585,11 +1583,11 @@ procedures processAck and processNak.
 PAtexp they were using before a crash, modeled here as an association
 constant AAtexp (see Section 6.2.5).)
 
-### ReceiverInitialization
+### Receiver Initialization
 
 Receivers must wait at least Δt after an initialization before
 accepting any Rendezvous or Data packets to protect against duplicates
-(see AppendixA). TheΔtusedisthesender'sand,withlossofmemory,the
+(see AppendixA). The Δt used is the sender's and, with loss of memory, the
 receiver will not know it until a packet arrives. Therefore, the
 receive wait interval is computed from PAtexp in the packet header
 relative to the Aidt field in the CR (see Section 6.2.5). This
@@ -1597,7 +1595,7 @@ condition is checked in the procedure acceptData and the function
 acceptRendezvous and guarantees that all packets sent before the crash
 will have been destroyed, before receiving begins again.
 
-### ConnectionRecordDefinition
+### Connectio nRecord Definition
 
 The Connection Record defined below is not meant to imply that a given
 implementation would require exactly the same variables. More or less
@@ -2047,7 +2045,7 @@ may also result in a Rendezvous packet being generated, in which case
 DtFinishData does not need to be called.
 
 DtStartData is called by the EIM either when (1) there is data to send
-ana the sendCode in the ISR is 1 (e.g. should try to send even if the
+and the sendCode in the ISR is 1 (e.g. should try to send even if the
 output window is zero so that a Rendezvous packet will be sent) or (2)
 when the sendCode returned from the DtPktRcvd procedure is 2
 indicating that a Data packet (even if header-only) is required to Ack
@@ -2311,7 +2309,7 @@ carry data, the secondary one, as part of window management, is to
 "Ack" a reliable-Ack that is reporting the opening of a zero window,
 completing the rendezvous-at-the-sender procedure. In order for a Data
 packet to be accepted there must have been sufficient time since the
-Delta-t environment was initialized ana the SN of at least one bit in
+Delta-t environment was initialized and the SN of at least one bit in
 the packet, or the Pid (in the case of dataless Data packets) must
 equal Riwle. If a bit is accepted jor overflow occurs Rtimer is
 updated.
@@ -3001,7 +2999,7 @@ deallocated.
 
 procedure Deallocate (ag, a^:Address); begin
 end
-{The system searches for a specific-ISR or any-ISR that matches the ag, ai pair ana deallocates it.}
+{The system searches for a specific-ISR or any-ISR that matches the ag, ai pair and deallocates it.}
 
 TheDeallocateprimitivehasJTOend-to-endsignificance. The end-to-end
 synchronization User level significance of "Close", "Disconnect" or
