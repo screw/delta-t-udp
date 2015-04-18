@@ -1459,7 +1459,7 @@ Rendezvous Packets:
  - If the receive window is zero a return parameter is output to the
    EIM indicating that it should remember that the correspondent end
    wants to be reliably informed when the receive window opens.
- - AnAckflagisreturned.AnAckpacketwillbegeneratedwhen the EIM
+ - An Ackflagisreturned.AnAckpacketwillbegeneratedwhen the EIM
    schedules and issues a DtAck call.
 
 Ack Packets:
@@ -1508,7 +1508,7 @@ header information was defined in Section 5. We now define the state
 information maintained at each end. Logically, state information is
 always being maintained by each end for all possible associations with
 which Delta-t might be involved (permanent connections). In fact, 
-however,state information must
+however, state information must
 only be explicitly maintained for a subset of associations. For all
 other associations, the state information values are standard
 defaults. State records containing default values can be reclaimed.
@@ -1595,7 +1595,7 @@ condition is checked in the procedure acceptData and the function
 acceptRendezvous and guarantees that all packets sent before the crash
 will have been destroyed, before receiving begins again.
 
-### Connectio nRecord Definition
+### Connection Record Definition
 
 The Connection Record defined below is not meant to imply that a given
 implementation would require exactly the same variables. More or less
@@ -1928,8 +1928,8 @@ end
 
 When Stimer expires either of the following two cases could exist:
 
- - (1) allbitsandpacketssenthavebeenAcked.
- - (2) thereareoutstandingunAckedbitsoranunAckedRendezvouspacket.
+ - (1) all bits and packets sent have been Acked.
+ - (2) there are outstanding unAcked bits or an unAcked Rendezvous packet.
 
 UnAcked reliable-Acks are removed from the retry structure when they
 have had their maximum retransmissions. The rules for handling CR
@@ -2398,7 +2398,7 @@ harm, although such occurrences may lead to the exchange of extra
 packets, as discussed under window management in Section 2.7.3.
 
 The procedure processAck specifies the rule for Ack packet acceptance
-and correctstateupdatewhenanAckpacketisaccepted. ItcallsacceptAckto
+and correct state update when an Ack packet is accepted. It calls acceptAck to
 test an Ack packet for acceptance. Some duplicate or missequenced Acks
 are rejected, but net all. Duplicate or missequenced Acks with
 Pid=Sowle or that have Ppuf set true are not detectable.
@@ -2577,7 +2577,7 @@ Delta-t was designed with John Fletcher. Jed Donnelley played an
 important role in motivating the need for a reliable transaction
 oriented protocol, the sender and receiver not having to agree on the
 values for the
-componentsofacommonΔt,andforrendezvous-at-the-sender. DanNessett, Bob
+components of a common Δt, and for rendezvous-at-the-sender. Dan Nessett, Bob
 Judd, and Lansing Sloan made many helpful suggestions. The design
 benefited significantly from interactions with members of the ARPA TCP
 protocol design community, particularly Jon Postel. Valuable
@@ -2715,7 +2715,7 @@ A = time for receiver to generate an acknowledgment.
 Condition A-1 is satisfied by the interval Δt because the receiver
 sets its timer whenever it accepts an SN. No bit can live longer than
 Δt by R.5
-(seeSection2.6). (Note:thereceivercannotjustsetitsRtimerfromthe value
+(see Section2.6). (Note: the receiver cannot just set its Rtimer from the value
 in the Plifetime field of the accepted packet because the rule for
 counting it down requires at least one tick for each link and node a
 packet traverses even if the time spent on that link or in that node
