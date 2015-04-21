@@ -2738,7 +2738,7 @@ interval.
 
  - 3) TheinstantΔt-xisthelastmomentwhenapacketcontainingnew elements
       can be emitted by the sender because of rule R.2. This packet
-      will have Parf = false because P^ was unAcked at the time it was
+      will have Pdrf = false because P^ was unAcked at the time it was
       sent.
 
  - 4) Intheworstcaseitcouldarriveatthereceiverat2Δt-xsince the Rtimer
