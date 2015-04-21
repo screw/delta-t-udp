@@ -2736,19 +2736,19 @@ interval.
       Acks, no Ack to Pi has arrived at the sender at Δt-x (where x is
       a very small number).
 
- - 3) TheinstantΔt-xisthelastmomentwhenapacketcontainingnew elements
+ - 3) The instant Δt-x is the last moment when a packet containing new elements
       can be emitted by the sender because of rule R.2. This packet
       will have Pdrf = false because P^ was unAcked at the time it was
       sent.
 
- - 4) Intheworstcaseitcouldarriveatthereceiverat2Δt-xsince the Rtimer
+ - 4) In the worst case it could arrive at the receiver at 2Δt-x since the Rtimer
       was set in step 1. For a packet with Pdrf = false to be
       accepted, Rtimer > 0, therefore yielding the need for Rtimer to
       run 2Δt.
 
 ### Condition B-1 needs Stime > 2Δt
 
- - 1) APacketcanliveatmostΔtbyruleR.5. ADatapacketandits Ack packet
+ - 1) A Packet can live at most Δt by rule R.5. A Data packet and its Ack packet
       can live at most 2Δt, with no gap in the timing of their
       lifetimes.
 
