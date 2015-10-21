@@ -1527,14 +1527,6 @@ implementation. Other send and receive variables are local to Delta-t
 procedures.
 
 
-Rtimer RAtexp Riwle Riwre
-I Rovflwind a) Receive State
-stimer StimeStamp
-Sou Sowle Sowre
-SrendSenderInd Sovflwind SeSentInd Sretryind
-SseriousNakInd SNakReason
-SinPtr SoutPtr SendPtr
-b) Send State
 
                                          +---------------------------------+
                                          |             Stimer              |
@@ -1555,15 +1547,15 @@ b) Send State
                                          |---------------------------------|
                                          |             SretryInd           |
         +----------------------+         |---------------------------------|
-        |      Rtimer          |         |            SeriosNakInd         |
+        |      Rtimer          |         |            SseriosNakInd        |
         |----------------------|         |---------------------------------|
-        |      RΔtexp          |         |            SeriosNakInd         |
+        |      RΔtexp          |         |            SNakReason           |
         |----------------------|         |---------------------------------|
-        |      Riwle           |         |            SeriosNakInd         |
+        |      Riwle           |         |            SinPtr               |
         |----------------------|         |---------------------------------|
-        |      Riwre           |         |            SeriosNakInd         |
+        |      Riwre           |         |            SoutPtr              |
         |----------------------|         |---------------------------------|
-        |      RovflwInd       |         |            SeriosNakInd         |
+        |      RovflwInd       |         |            SendPtr              |
         +----------------------+         +---------------------------------+
         a)   Receive State                       b) Send State
 
@@ -1612,7 +1604,7 @@ procedures processAck and processNak.
 
 (There is the implied requirement that senders must know what value of
 PAtexp they were using before a crash, modeled here as an association
-constant AAtexp (see Section 6.2.5).)
+constant AΔtexp (see Section 6.2.5).)
 
 ### Receiver Initialization
 
@@ -1633,25 +1625,79 @@ implementation would require exactly the same variables. More or less
 variables may be needed depending on its algorithms. All variables are
 initialized to default values when the CR is created.
 
-CR= {ConnectionRecord}record Aassoc:AR; {association record defined in Section 6.3}
-AmaxPktSize, {max packet size for this association, set from global state when the CR is created.}
-AAtexp, {parameter set from global state to be used to compute the initial value of the packet Plifetime field, placed in the packet
-PAtexp fields, and used to derive the value for Stimer. A given implementation chooses AAtexp to create an appropriate Δt. Δt isthesum.Δt=R+MPL+A,where
-R= time sender normally expects to keep retransmiting (this time would usually be n average-round trip times).
-MPL = an estimate of worst case acceptable network-travel-time. It should be a value assuming queuing and processing in the longest expected chain of intermediate store and forward nodes.
-A = Maximum expected time until the receiver will Ack an SN. The value is a function of receiver's implementation or some reasonable worst case estimate such as a few seconds. A standard upper bound on A will be established.}
-Aretrytime:integer; {time between retransmissions when "Acks" are not received; a number related to average round trip time set
-from global state.}
-Aidt:DateTime; {The dateTime of the last initialization of the environment for this association.}
+CR = {Connection Record} record 
+  Aassoc:AR; {association record defined in Section 6.3}
+  AmaxPktSize, {max packet size for this 
+     association, set from global state when the CR is created.}
+  
+  AΔtexp, {parameter set from global state to be used to compute the
+  initial value of the packet Plifetime field, placed in the packet
+  PAtexp fields, and used to derive the value for Stimer. A given 
+  implementation chooses AAtexp to create an appropriate Δt. Δt 
+  is the sum. Δt=R+MPL+A, where
+    R = time sender normally expects to keep retransmiting (this time 
+        would usually be n average-round trip times).
+    MPL = an estimate of worst case acceptable network-travel-time. It 
+          should be a value assuming queuing and processing in the longest 
+          expected chain of intermediate store and forward nodes.
+    A = Maximum expected time until the receiver will Ack an SN. The 
+        value is a function of receiver's implementation or some 
+        reasonable worst case estimate such as a few seconds. A 
+        standard upper bound on A will be established.}
+        
+    Aretrytime: integer; {time between retransmissions when "Acks" 
+      are not received; a number related to average round trip time set
+      from global state.}
+    Aidt: DateTime; {The dateTime of the last initialization of 
+      the environment for this association.}
+      
 {Send variables set to default values when the CR is initialized}
-Stimer, {Purpose: Stimer serves two functions, assurance and smooth data flow. The assurance function of the Stimer is also twofold: (1) to
-assure that the CR is maintained until all Acks will be received if they are ever going to arrive (graceful close, only a remote end crash or network partition would prevent their timely arrival), (2) to assure that no SN is reused with new data until all packets containing it have died. The smooth data flow function guarantees that the sender's CR is active longer than the peer's CR so that acceptable SNs are generated. No harm results if Stimer is allowed to run beyond its expiration time. Its purpose could be compromised if it is allowed to expire early. When Stimer expires and Sou^Sowle an error condition exists (see
-below). Default:        = 0. When changed: Stimer is set when a new sequence number (SN) is sent
-in Data (see procedure sendData) or Rendezvous packets (see procedure sendRendezvous), or a reliable-Ack
-packet is sent requiring a Data packet as an "Ack" (see procedure sendAck). It is set to the dateTime it is to expire. The Stimer interval is 3*2**AAtexp. Stimer is reset to 0 when it expires (see procedure StimerExpired).}
-StimeStamp:DateTime; {Purpose: StimeStamp is the dateTime of receipt of a Data or
-Rendezvous packet requiring an Ack packet. This is a model dependent variable required here because an Ack is not necessarily generated immediately when Data or Rendezvous packets are tested for acceptance. The EIM must schedule a DtAck call to cause Delta-t to update the receive window (Riwre-Riwle) and generate the Ack. If no delay were assumed between the return from a DtPktRcvd call and the issuing of the DtAck, this variable would not be needed. The requirement that must be met for correct Delta-t operation is that there must be no gap between the timing of the lifetimes of the latest SN and its Ack. The condition to be met is that the combined lifetime of the latest SN received in a Data or Rendezvous packet and its Ack must not exceed 2*2**PAtexp (2Δt) (see Appendix A). Exactly where a given implementation chooses to end the timing of the lifetime of a received SN and begin the lifetime timing of its Ack is an implementation choice. In this model StimeStamp is used to compute
-the interval between acceptance testing of the most recently arrived SN and its Ack. The Rtimer (see receive state below) is to be refreshed at the point the lifetime timing of each incoming SN stops. Default:       = 0.
+
+Stimer, 
+  {Purpose: Stimer serves two functions, assurance and smooth data 
+  flow. The assurance function of the Stimer is also twofold: (1) to
+  assure that the CR is maintained until all Acks will be received if 
+  they are ever going to arrive (graceful close, only a remote end crash 
+  or network partition would prevent their timely arrival), (2) to 
+  assure that no SN is reused with new data until all packets containing 
+  it have died. 
+  The smooth data flow function guarantees that the sender's CR is 
+  active longer than the peer's CR so that acceptable SNs are generated. 
+  No harm results if Stimer is allowed to run beyond its expiration 
+  time. Its purpose could be compromised if it is allowed to expire 
+  early. 
+  When Stimer expires and Sou=/Sowle an error condition exists (see
+below). 
+  Default:  = 0. 
+  When changed: Stimer is set when a new sequence number (SN) is sent
+                in Data (see procedure sendData) or Rendezvous packets 
+                (see procedure sendRendezvous), or a reliable-Ack
+                packet is sent requiring a Data packet as an "Ack" (see 
+                procedure sendAck). It is set to the dateTime it is to 
+                expire. The Stimer interval is 3*2**AΔtexp. Stimer 
+                is reset to 0 when it expires (see procedure 
+                StimerExpired).}
+                
+StimeStamp: DateTime; 
+  {Purpose: StimeStamp is the dateTime of receipt of a Data or
+  Rendezvous packet requiring an Ack packet. This is a model dependent 
+  variable required here because an Ack is not necessarily generated 
+  immediately when Data or Rendezvous packets are tested for 
+  acceptance. The EIM must schedule a DtAck call to cause Delta-t to 
+  update the receive window (Riwre-Riwle) and generate the Ack. If no 
+  delay were assumed between the return from a DtPktRcvd call and the 
+  issuing of the DtAck, this variable would not be needed. The 
+  requirement that must be met for correct Delta-t operation is that 
+  there must be no gap between the timing of the lifetimes of the latest 
+  SN and its Ack. The condition to be met is that the combined lifetime 
+  of the latest SN received in a Data or Rendezvous packet and its Ack 
+  must not exceed 2*2**PΔtexp (2Δt) (see Appendix A). Exactly where 
+  a given implementation chooses to end the timing of the lifetime of a 
+  received SN and begin the lifetime timing of its Ack is an 
+  implementation choice. In this model StimeStamp is used to compute
+  the interval between acceptance testing of the most recently arrived 
+  SN and its Ack. The Rtimer (see receive state below) is to be 
+  refreshed at the point the lifetime timing of each incoming SN stops. Default:       = 0.
 When changed: StimeStamp is set to the current dateTime during the procedures processData or processRendezvous and reset
 when an Ack packet is sent (see procedure sendAck)}
 {Now we define a send SN space, a series of SNs that correspond in SN space to the pointers in the ISR logical send queue (see Appendix B).}
