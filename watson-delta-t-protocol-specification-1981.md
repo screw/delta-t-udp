@@ -1226,20 +1226,20 @@ I\I 1\\1
 I Std   IPAtver IStd    I
 J\\I
 
-Psubtype: definesthecontrolsubtype.
+Psubtype: defines the control subtype.
 
-PAtver: 2bitDelta-tversionnumber.
+PAtver: 2bit Delta-t version number.
 
 Subtype dependent: defined for each sub type.
 
 Psubtype = 1: Rendezvous packet. Packet header fields for a Rendezvous
 packet are the following.
 
-Ptype: Set2,Direct-control.
+Ptype: Set 2, Direct-control.
 
-Pdn: Set0,donotNak.
+Pdn: Set 0, do not Nak.
 
-PprtctLev: Dependsonprotectionpolicyenforced.
+PprtctLev: Depends on protection policy enforced.
 
 Pid: Sequence number of next data bit receiver is currently known to expect.
 
@@ -1250,13 +1250,13 @@ Ptdf
 I\\I IPresscontinuedIPAtver I   Psno    I
 JI\I
 
-Pres7: 15bitsreserved,set0.
+Pres7: 15bits reserved, set 0.
 
-Pdrf: (seePdrfforDatapackets).
+Pdrf: (see Pdrf for Data packets).
 
-Pres8: 18bitsreserved,set0.
+Pres8: 18bits reserved, set 0.
 
-PAtver: 2bitDelta-tversionnumber.
+PAtver: 2bit Delta-t version number.
 
 Psno: SN offset used by receiver to readjust its next expected SN.
 
@@ -1334,8 +1334,8 @@ Rtimer -> 0.
    retransmissions and ambiguity if acceptance did not
    occur. Therefore, this event should have high priority for input to
    Delta-t.
-    - AllCRreceivestatevariablesareresettoorbecomedefaultvalues.
-    - Thereisnooutputfunction.
+    - All CR receive state variables are reset to or become defaul tvalues.
+    - There is no output function.
 
 Stimer -> 0.
  - This event is handled in the procedure StimerExpired.
