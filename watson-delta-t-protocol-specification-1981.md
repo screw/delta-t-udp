@@ -1339,15 +1339,15 @@ Rtimer -> 0.
 
 Stimer -> 0.
  - This event is handled in the procedure StimerExpired.
-    - AllCRstatesendvariablesareresettoorbecomedefaultvalues.
-    - IfallpacketssenthavenotbeenAcked,agiveuptimeouthas
+    - All CR state send variables are reset to or become defaul tvalues.
+    - If all packets sent have not been Acked, a giveup timeout has
       occurred. Data in doubt is identified and an error code is
       output.
 
 Retrytimer -> 0.
  - A packet's retry timer has expired (checked in function
    shouldRetry).
-    - PacketretransmissionishandledintheproceduresendRetry. Ifthe
+    - Packet retransmission is handled in the procedure sendRetry. If the
       lifetime of the packet to be retransmitted has not expired,
       parameters are returned as output. Data retransmission takes
       place by Delta-t indicating to the EIM the data to be
@@ -1356,8 +1356,8 @@ Retrytimer -> 0.
       the Data packet for retransmission. Delta-t prepares Ack or
       Rendezvous packets to be retransmitted and returns a pointer to
       the packet buffer.
-    - ARetrytimermaybesetasanoutputfunction.
-    - Thestateoftheretrydatastructureisupdated.
+    - A Retrytimer may be set as an output function.
+    - The state of the retry data structure is updated.
 
 After having checked for the above events, if any, and having
 performed the appropriate state transitions an EIM data sending
@@ -1373,7 +1373,7 @@ default state.
 ### Data Receiving and Sending
 
 Packet formation and state update takes place in procedures with names
-of the form sendX ,where X is Data, Ack, Rendezvous, or Nak.
+of the form sendX, where X is Data, Ack, Rendezvous, or Nak.
 
 Receive or Receive Abort
  - When a Receive or Receive-Abort call is issued by the IPC user, or
@@ -1406,7 +1406,7 @@ Send
       buffer and a count of the amount of data to be sent are returned
       in DtStartData. The data is then placed in the packet buffer by
       the EIM and DtFinishData
-      iscalled. IfaRendezvouspacketistobesent,Delta-tprepares it and
+      iscalled. If a Rendezvous packet is to be sent, Delta-t prepares it and
       returns a pointer to it.
     - The Stimer will be set when a new data or Rendezvous packet is sent.
     - Send state variables reflecting the number of SNs consumed by
@@ -1480,7 +1480,7 @@ Ack Packets:
  - The IPC user is signaled by the EIM if a Send has completed.
 
 Nak Packets:
- - Stateisupdatedpossiblyresultinginoptionalsuspensionof new data
+ - State is updated possibly resulting in optional suspension of new data
    sending, or in immediate retransmission.
 
  - The Nak is optionally recorded in a history file.
@@ -1498,7 +1498,7 @@ variable names is the following:
  - any other letter - local variable used only in the procedure it is
    declared or argument or return.
 
-## ConnectionRecordDefinitionandManagement
+## Connection Record Definition and Management
 
 ### Introduction
 
@@ -1535,6 +1535,37 @@ SrendSenderInd Sovflwind SeSentInd Sretryind
 SseriousNakInd SNakReason
 SinPtr SoutPtr SendPtr
 b) Send State
+
+                                         +---------------------------------+
+                                         |             Stimer              |
+                                         |---------------------------------|
+                                         |             StimeStamp          |
+                                         |---------------------------------|
+                                         |             Sou                 |
+                                         |---------------------------------|
+                                         |             Sowle               |
+                                         |---------------------------------|
+                                         |             Sowre               |
+                                         |---------------------------------|
+                                         |             SrendSenderInd      |
+                                         |---------------------------------|
+                                         |             SovflwInd           |
+                                         |---------------------------------|
+                                         |             SeSentInd           |
+                                         |---------------------------------|
+                                         |             SretryInd           |
+        +----------------------+         |---------------------------------|
+        |      Rtimer          |         |            SeriosNakInd         |
+        |----------------------|         |---------------------------------|
+        |      RΔtexp          |         |            SeriosNakInd         |
+        |----------------------|         |---------------------------------|
+        |      Riwle           |         |            SeriosNakInd         |
+        |----------------------|         |---------------------------------|
+        |      Riwre           |         |            SeriosNakInd         |
+        |----------------------|         |---------------------------------|
+        |      RovflwInd       |         |            SeriosNakInd         |
+        +----------------------+         +---------------------------------+
+        a)   Receive State                       b) Send State
 
 Figure 6.1 Receive and Send CR State Information per Association (not the comp lete CR)
 
@@ -1608,7 +1639,7 @@ AAtexp, {parameter set from global state to be used to compute the initial value
 PAtexp fields, and used to derive the value for Stimer. A given implementation chooses AAtexp to create an appropriate Δt. Δt isthesum.Δt=R+MPL+A,where
 R= time sender normally expects to keep retransmiting (this time would usually be n average-round trip times).
 MPL = an estimate of worst case acceptable network-travel-time. It should be a value assuming queuing and processing in the longest expected chain of intermediate store and forward nodes.
-A= Maximum expected time until the receiver will Ack an SN. The value is a function of receiver's implementation or some reasonable worst case estimate such as a few seconds. A standard upper bound on A will be established.}
+A = Maximum expected time until the receiver will Ack an SN. The value is a function of receiver's implementation or some reasonable worst case estimate such as a few seconds. A standard upper bound on A will be established.}
 Aretrytime:integer; {time between retransmissions when "Acks" are not received; a number related to average round trip time set
 from global state.}
 Aidt:DateTime; {The dateTime of the last initialization of the environment for this association.}
