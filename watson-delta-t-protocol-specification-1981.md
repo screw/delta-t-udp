@@ -1627,19 +1627,23 @@ initialized to default values when the CR is created.
 
 CR = {Connection Record} record 
   Aassoc:AR; {association record defined in Section 6.3}
+  
   AmaxPktSize, {max packet size for this 
      association, set from global state when the CR is created.}
   
   AΔtexp, {parameter set from global state to be used to compute the
   initial value of the packet Plifetime field, placed in the packet
-  PAtexp fields, and used to derive the value for Stimer. A given 
-  implementation chooses AAtexp to create an appropriate Δt. Δt 
+  PΔtexp fields, and used to derive the value for Stimer. A given 
+  implementation chooses AΔtexp to create an appropriate Δt. Δt 
   is the sum. Δt=R+MPL+A, where
+  
     R = time sender normally expects to keep retransmiting (this time 
         would usually be n average-round trip times).
+        
     MPL = an estimate of worst case acceptable network-travel-time. It 
           should be a value assuming queuing and processing in the longest 
           expected chain of intermediate store and forward nodes.
+          
     A = Maximum expected time until the receiver will Ack an SN. The 
         value is a function of receiver's implementation or some 
         reasonable worst case estimate such as a few seconds. A 
@@ -1648,6 +1652,7 @@ CR = {Connection Record} record
     Aretrytime: integer; {time between retransmissions when "Acks" 
       are not received; a number related to average round trip time set
       from global state.}
+      
     Aidt: DateTime; {The dateTime of the last initialization of 
       the environment for this association.}
       
@@ -1697,20 +1702,35 @@ StimeStamp: DateTime;
   implementation choice. In this model StimeStamp is used to compute
   the interval between acceptance testing of the most recently arrived 
   SN and its Ack. The Rtimer (see receive state below) is to be 
-  refreshed at the point the lifetime timing of each incoming SN stops. Default:       = 0.
-When changed: StimeStamp is set to the current dateTime during the procedures processData or processRendezvous and reset
-when an Ack packet is sent (see procedure sendAck)}
-{Now we define a send SN space, a series of SNs that correspond in SN space to the pointers in the ISR logical send queue (see Appendix B).}
-Sou, {Purpose:  SN of the oldest unAcked SN. If Sou = Sowle then all Data
-or Rendezvous packets sent have been Acked. Default:    = arbitrary.
-When changeo: Sou is updated during the procedure processAck as data or Rendezvous packets sent are Acked.
-Sowle, {Purpose:        SN of the next bit or Rendezvous packet to be sent
-(output-window-left-£dge). Default:     = Sou.
-When changed: Sowle is changed in the procedures sendData and sendRendezvous when a Data or Rendezvous packet is
-Sowre:SN; {Purpose:
-created.
-SN + 1 of "largest SN" the receiver can accept (^utput-window-^ight-^dge). Thatis,thereceiverhas
-advertised willingness to receive SN's up to but not including Sowre. Sowre is used to determine if Data packets containing data can be sent (see function shouldData), or a Rendezvous packet should be sent (see function shouldRendezvous).
+  refreshed at the point the lifetime timing of each incoming SN stops. 
+  Default:       = 0.
+  When changed: StimeStamp is set to the current dateTime during the 
+                procedures processData or processRendezvous and reset
+                when an Ack packet is sent (see procedure sendAck)}
+                
+{Now we define a send SN space, a series of SNs that correspond in SN 
+space to the pointers in the ISR logical send queue (see Appendix B).}
+
+Sou, 
+  {Purpose:  SN of the oldest unAcked SN. If Sou = Sowle then all Data
+             or Rendezvous packets sent have been Acked. 
+  Default:    = arbitrary.
+  When changed: Sou is updated during the procedure processAck as data 
+                or Rendezvous packets sent are Acked.
+Sowle, 
+  {Purpose:  SN of the next bit or Rendezvous packet to be sent
+             (output-window-left-£dge). 
+  Default:     = Sou.
+  When changed: Sowle is changed in the procedures sendData and 
+                sendRendezvous when a Data or Rendezvous packet is
+                created.
+Sowre:SN; 
+  {Purpose:     SN + 1 of "largest SN" the receiver can accept 
+  (output-window-right-edge). That is, the receiver has
+  advertised willingness to receive SN's up to but not 
+  including Sowre. 
+  Sowre is used to determine if Data packets containing data 
+  can be sent (see function shouldData), or a Rendezvous packet should be sent (see function shouldRendezvous).
 = Sowle + n, where n is a network or association default.
 Default: When changed: Sowre is updated to Sou + Pwindow in the procedure
 processAck, to Sowle in the procedure sendData when a E-bit is sent (output window goes zero), and to Sowle plus an offset provided by the EIM in procedure DtStartData.
