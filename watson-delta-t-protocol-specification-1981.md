@@ -3064,11 +3064,19 @@ of the association with which it can be used completely defined as two
 full 64 bit LINCS addresses. The any-ISR has one or both ports
 incompletely defined. We define a new primitive for this purpose.
 
-procedure Allocate (ag, ai:Address; var fig:Boolean); Begin
-{ag and ai define the ends of the association(s) that can utilize the allocated ISR. If a^ and a^ are fully specified thenwecallitanAllocate-specific. IfeitherQQoraj^are incompletely specified then we call it an Allocate-any, where "any" refers to any association that matches the specified parts of ag anda^. figreturnsfalseifanISRcouldnotbeallocated. If an ISR already exists for the (specific) association. Allocate does nothing.i
-end {Allocate}
+procedure Allocate (a_0, a_1:Address; var flg:Boolean); 
+    Begin
+      {a_0 and a_1 define the ends of the association(s) that can 
+      utilize the allocated ISR. If a^ and a^ are fully specified 
+      then we call it an Allocate-specific. If either a_0 or a_1 are 
+      incompletely specified then we call it an Allocate-any, where "any" 
+      refers to any association that matches the specified parts of a_0 
+      and a_1. flg returns false if an ISR could not be allocated. If 
+      an ISR already exists for the (specific) association. Allocate does 
+      nothing.}
+    end {Allocate}
 
-When any of the primitives of the previous section are issued, a check
+  When any of the primitives of the previous section are issued, a check
 is first made of all specific-ISRs for the local port. If one is
 found, its state controls the transfer, otherwise an error
 exists. When data is received at a port a check is made of the
