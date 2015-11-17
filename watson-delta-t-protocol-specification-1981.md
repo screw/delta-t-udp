@@ -3051,7 +3051,7 @@ could be involved. This is clearly not practical'. One would like to
 only maintain ISR's for active associations, i.e., those involved in a
 "conversation". Further, it is often the case that the identifiers of
 one or both ends of an association are not
-knownatthepointwhenanISRmustbeallocated. Thisiscommoninthecase of
+known at the point when an ISR must be allocated. This is common in the case of
 Server processes, since the address of a Customer port that may
 request service cannot be known ahead of time, yet state and buffer
 resources must be allocated to receive the requests.
@@ -3089,7 +3089,7 @@ NOTE - In an actual implementation the function of the Allocate
 primitive could be combined with the Send or Receive primitives as is
 done in Appendix A of reference [21].
 
-Allocate,asdefinedhere,hasnoend-to-endsignificance. Itonly allocates a
+Allocate, as defined here, has no end-to-end significance. It only allocates a
 local ISR. The "Open", "Call Establishment" or other such primitives
 defined in many other transport interfaces often do have end-to-end
 significance as well as cause an ISR to be allocated [3,10,12]. They
@@ -3102,11 +3102,12 @@ purposes not needed in Delta-t.
 Having allocated an ISR one then needs to define when and how it is
 deallocated.
 
-procedure Deallocate (ag, a^:Address); begin
+procedure Deallocate ($a_0$, $a_1$:Address); 
+  begin
+      {The system searches for a specific-ISR or any-ISR that matches 
+      the $a_0$, $a_1$ pair and deallocates it.}
 end
-{The system searches for a specific-ISR or any-ISR that matches the ag, ai pair and deallocates it.}
-
-TheDeallocateprimitivehasJTOend-to-endsignificance. The end-to-end
+The Deallocate primitive has no end-to-end significance. The end-to-end
 synchronization User level significance of "Close", "Disconnect" or
 other such primitives found in some transport services is provided in
 LINCS with higher level conventions in the data. Delta-t does not
